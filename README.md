@@ -4,9 +4,8 @@
 ### 引用
 
 ```html
-<link rel="stylesheet" href="${base}/resources/jquery-multiTextToggleCollapse/index.css" />
-<script type="text/javascript"
-    src="${base}/resources/jquery-multiTextToggleCollapse/jquery.multiTextToggleCollapse.js"></script>
+<link rel="stylesheet" href="${path}/src/index.css" />
+<script type="text/javascript" src="${path}/src/jquery.multiTextToggleCollapse.js"></script>
 ```
 
 ### 使用
