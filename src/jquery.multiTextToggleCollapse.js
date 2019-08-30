@@ -18,10 +18,45 @@
         var $wrapBox = this;
         var wrapBox = $wrapBox[0];
         var text = $wrapBox.text();
-        var lineHeight = parseInt($wrapBox.css("line-height"));
+        var textHeight = parseInt($wrapBox.css("height"));
+
+        var lineHeightStr = $wrapBox.css("line-height"); // normal 12px 1.2 120% 1.2em 
+        var fontSize = parseInt($wrapBox.css("font-size")); // 12px -> 12
+
+        var strategyMode = {
+            "normal": function () {
+                return fontSize;
+            },
+            "px": function (num) {
+                return +num;
+            },
+            "em": function (num) {
+                return num * fontSize;
+            },
+            "%": function (num) {
+                return num / 100 * fontSize;
+            },
+            "void": function (num) {
+                return num * fontSize;
+            }
+        };
+
+        var num = (lineHeightStr.match(/\d+(.\d+)?/) || [1])[0]; // 12px -> 12
+        var unit = lineHeightStr.replace(num, '') || 'void'; // 12px -> px
+
+        var lineHeight = strategyMode[unit](num).toFixed(2);
 
         $wrapBox.addClass('tool-multiwrapbox');
-        wrapBox.style.cssText = ';height:' + config.line * lineHeight + 'px;';
+
+        var visibleHeight = config.line * lineHeight;
+        // 向上取整，尽量让可视区大点 (bug edge 下的 visibleHeight 和其他浏览器计算不同)
+        visibleHeight = Math.ceil(visibleHeight);
+        // 如果文本内容少于容器大小，则退出，不进行截断处理
+        if (textHeight <= visibleHeight) {
+            return;
+        }
+
+        wrapBox.style.cssText = ';height:' + visibleHeight + 'px;';
 
         var textBox = document.createElement("div");
 
@@ -69,7 +104,6 @@
             $btnWrapBox.show();
             $wrapBox.removeClass(RESET_CLASS);
         };
-
     };
 
 }(this, jQuery));
